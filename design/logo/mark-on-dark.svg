@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Full app icon / favicon / splash source: mark on the dark surface token (#0a0a0a). -->
+  <defs>
+    <linearGradient id="tealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4ad9a8"/>
+      <stop offset="100%" stop-color="#2a9c75"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1024" height="1024" fill="#0a0a0a"/>
+
+  <g stroke="#38c999" stroke-linecap="round">
+    <line x1="120" y1="420" x2="250" y2="340" stroke-width="26" opacity="0.35"/>
+    <line x1="150" y1="480" x2="290" y2="400" stroke-width="26" opacity="0.6"/>
+    <line x1="180" y1="540" x2="330" y2="460" stroke-width="26" opacity="0.9"/>
+  </g>
+
+  <path
+    d="M 420 258 L 420 766 A 254 254 0 0 0 420 258"
+    fill="none"
+    stroke="url(#tealGrad)"
+    stroke-width="92"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <path d="M 560 446 L 684 512 L 560 578 Z" fill="url(#tealGrad)"/>
+</svg>
