@@ -1,0 +1,242 @@
+[
+  {
+    "name": "@expo-google-fonts/racing-sans-one",
+    "version": "0.4.1",
+    "license": "MIT AND OFL-1.1"
+  },
+  {
+    "name": "@expo-google-fonts/rajdhani",
+    "version": "0.4.1",
+    "license": "MIT AND OFL-1.1"
+  },
+  {
+    "name": "@expo-google-fonts/teko",
+    "version": "0.4.1",
+    "license": "MIT AND OFL-1.1"
+  },
+  {
+    "name": "@expo/ui",
+    "version": "57.0.22",
+    "license": "MIT"
+  },
+  {
+    "name": "@react-native-async-storage/async-storage",
+    "version": "2.2.0",
+    "license": "MIT"
+  },
+  {
+    "name": "@react-navigation/drawer",
+    "version": "7.14.3",
+    "license": "MIT"
+  },
+  {
+    "name": "@react-navigation/native",
+    "version": "7.5.0",
+    "license": "MIT"
+  },
+  {
+    "name": "@supabase/supabase-js",
+    "version": "2.117.3",
+    "license": "MIT"
+  },
+  {
+    "name": "@tamagui/animations-reanimated",
+    "version": "3.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "@tamagui/config",
+    "version": "3.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "@tamagui/core",
+    "version": "3.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "@tamagui/lucide-icons",
+    "version": "1.144.4",
+    "license": "MIT"
+  },
+  {
+    "name": "@tamagui/shorthands",
+    "version": "3.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "babel-plugin-module-resolver",
+    "version": "5.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo",
+    "version": "57.0.27",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-constants",
+    "version": "57.0.21",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-dev-client",
+    "version": "57.0.19",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-device",
+    "version": "57.0.2",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-file-system",
+    "version": "57.0.7",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-font",
+    "version": "57.0.4",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-glass-effect",
+    "version": "57.0.4",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-image",
+    "version": "57.0.5",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-linking",
+    "version": "57.0.12",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-router",
+    "version": "57.0.25",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-splash-screen",
+    "version": "57.0.9",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-status-bar",
+    "version": "57.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-symbols",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-system-ui",
+    "version": "57.0.4",
+    "license": "MIT"
+  },
+  {
+    "name": "expo-web-browser",
+    "version": "57.0.3",
+    "license": "MIT"
+  },
+  {
+    "name": "html-entities",
+    "version": "2.6.0",
+    "license": "MIT"
+  },
+  {
+    "name": "patch-package",
+    "version": "8.0.1",
+    "license": "MIT"
+  },
+  {
+    "name": "react",
+    "version": "19.2.3",
+    "license": "MIT"
+  },
+  {
+    "name": "react-dom",
+    "version": "19.2.3",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native",
+    "version": "0.86.3",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-gesture-handler",
+    "version": "2.32.0",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-get-random-values",
+    "version": "1.11.0",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-image-colors",
+    "version": "2.6.0",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-reanimated",
+    "version": "4.5.1",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-safe-area-context",
+    "version": "5.7.0",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-screens",
+    "version": "4.26.2",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-svg",
+    "version": "15.15.4",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-tcp-socket",
+    "version": "6.4.3",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-track-player",
+    "version": "4.1.2",
+    "license": "Apache-2.0"
+  },
+  {
+    "name": "react-native-web",
+    "version": "0.21.4",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-worklets",
+    "version": "0.10.1",
+    "license": "MIT"
+  },
+  {
+    "name": "react-native-zeroconf",
+    "version": "0.17.6",
+    "license": "MIT"
+  },
+  {
+    "name": "swr",
+    "version": "2.5.1",
+    "license": "MIT"
+  },
+  {
+    "name": "tamagui",
+    "version": "3.0.1",
+    "license": "MIT"
+  }
+]
