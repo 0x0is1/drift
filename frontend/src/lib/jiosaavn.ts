@@ -1,4 +1,5 @@
-import { ToastAndroid, Platform } from "react-native";
+import { ToastAndroid, Platform, NativeModules } from "react-native";
+import { File, Paths } from "expo-file-system";
 import { buildCookieHeader, normalizeLanguages } from "./languages";
 
 /**
@@ -25,6 +26,11 @@ class ServiceProvider {
 
   setLanguages(languages: string[]) {
     this.currentLanguages = normalizeLanguages(languages);
+    if (Platform.OS === "android" && NativeModules?.Networking?.clearCookies) {
+      try {
+        NativeModules.Networking.clearCookies(() => {});
+      } catch {}
+    }
   }
 
   getLanguages(): string[] {
@@ -32,16 +38,43 @@ class ServiceProvider {
   }
 
   private async request<T = any>(dir: string): Promise<T> {
+    const url = `${baseURL}${dir}`;
+    const cookieHeader = buildCookieHeader(this.currentLanguages);
+    const headers: Record<string, string> = {
+      Accept: "application/json, text/plain, */*",
+      Referer: "https://www.jiosaavn.com/",
+      Cookie: cookieHeader,
+      cookie: cookieHeader,
+    };
+
+    if (Platform.OS !== "web") {
+      let targetFile: File | null = null;
+      try {
+        const fileName = `saavn_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.json`;
+        targetFile = new File(Paths.cache, fileName);
+        const downloaded = await File.downloadFileAsync(url, targetFile, {
+          headers,
+          idempotent: true,
+        });
+        const text = await downloaded.text();
+        try {
+          return JSON.parse(text) as T;
+        } catch {
+          return {} as T;
+        }
+      } catch (nativeErr) {
+        console.warn("Native file download request failed, falling back to fetch", nativeErr);
+      } finally {
+        try {
+          if (targetFile?.exists) {
+            targetFile.delete();
+          }
+        } catch {}
+      }
+    }
+
     try {
-      const cookieHeader = buildCookieHeader(this.currentLanguages);
-      const response = await fetch(`${baseURL}${dir}`, {
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          Referer: "https://www.jiosaavn.com/",
-          Cookie: cookieHeader,
-          cookie: cookieHeader,
-        },
-      });
+      const response = await fetch(url, { headers });
       if (response.status < 400) {
         return (await response.json()) as T;
       }

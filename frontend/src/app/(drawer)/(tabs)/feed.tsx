@@ -17,6 +17,7 @@ import { getArtistAffinity, rankByAffinity } from "@lib/feedRanking";
 import { trimExcessLines } from "@lib/text";
 import { routes } from "@constants/routes";
 import { tokens } from "@theme/tokens";
+import { useLanguages } from "@contexts/LanguageContext";
 
 type FeedSong = {
   id: string;
@@ -53,14 +54,19 @@ export default function FeedScreen() {
   const { playSingleTrack, playState, isTrackLoading, formatTime, isLiked, toggleLike, localSync } = usePlayer();
   const progress = useProgress();
   const { onRepeat, toggleRepeat } = useRepeatMode();
-  const { data, error, isLoading: loading } = useSWR("feed-chart-playlist", async () => {
-    const charts = await serviceProvider.getCharts();
-    const chartList = (charts?.charts ?? charts ?? []) as { id: string }[];
-    const firstChart = chartList[0];
-    if (!firstChart) throw new Error("No charts available");
-    const playlist = await serviceProvider.getPlaylistById(firstChart.id);
-    return { songs: (playlist.songs ?? []) as FeedSong[], playlistArtist: playlist.firstname ?? "" };
-  });
+  const { selectedLanguages } = useLanguages();
+  const activeLangs = selectedLanguages.length > 0 ? selectedLanguages : ["hindi"];
+  const { data, error, isLoading: loading } = useSWR(
+    ["feed-chart-playlist", ...activeLangs],
+    async () => {
+      const charts = await serviceProvider.getCharts();
+      const chartList = (charts?.charts ?? charts ?? []) as { id: string }[];
+      const firstChart = chartList[0];
+      if (!firstChart) throw new Error("No charts available");
+      const playlist = await serviceProvider.getPlaylistById(firstChart.id);
+      return { songs: (playlist.songs ?? []) as FeedSong[], playlistArtist: playlist.firstname ?? "" };
+    },
+  );
   // Phase 6 v1 heuristic ranking (see CLAUDE.md) — reorders the chart by the
   // user's own play/like history, degrades to plain chart order with no history.
   const { data: affinity } = useSWR("feed-artist-affinity", getArtistAffinity);
