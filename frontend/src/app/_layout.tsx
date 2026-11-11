@@ -11,6 +11,7 @@ import { config } from "@theme/tamagui.config";
 import { googleFontsToLoad } from "@theme/typography";
 import { PlayerProvider } from "@contexts/PlayerContext";
 import { ThemeProvider, useAppTheme } from "@contexts/ThemeContext";
+import { LanguageProvider, useLanguages } from "@contexts/LanguageContext";
 import { DrawerUiProvider } from "@contexts/DrawerUiContext";
 import { IntroSplash } from "@components/IntroSplash";
 import { FloatingMusicIsland } from "@components/FloatingMusicIsland";
@@ -45,12 +46,14 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <ThemeProvider>
-          <ThemedApp
-            introDone={introDone}
-            onIntroFinish={onIntroFinish}
-            fontsLoaded={fontsLoaded}
-            playerReady={playerReady}
-          />
+          <LanguageProvider>
+            <ThemedApp
+              introDone={introDone}
+              onIntroFinish={onIntroFinish}
+              fontsLoaded={fontsLoaded}
+              playerReady={playerReady}
+            />
+          </LanguageProvider>
         </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
@@ -69,18 +72,19 @@ function ThemedApp({
   playerReady: boolean;
 }) {
   const { scheme, ready: themeReady } = useAppTheme();
+  const { isLoading: langLoading } = useLanguages();
 
   // Holds the native splash up until the persisted theme has actually been
   // read, not just fonts/player — otherwise it hides straight into a
   // default-dark first paint that flips to the saved light theme a tick
   // later (the "splash isn't themed" flash).
   useEffect(() => {
-    if (fontsLoaded && playerReady && themeReady) {
+    if (fontsLoaded && playerReady && themeReady && !langLoading) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, playerReady, themeReady]);
+  }, [fontsLoaded, playerReady, themeReady, langLoading]);
 
-  if (!fontsLoaded || !playerReady || !themeReady) return null;
+  if (!fontsLoaded || !playerReady || !themeReady || langLoading) return null;
 
   return (
     <TamaguiProvider config={config} defaultTheme="dark">
@@ -111,6 +115,14 @@ function ThemedApp({
               />
               <Stack.Screen
                 name="login"
+                options={{ presentation: "modal", animation: "slide_from_bottom" }}
+              />
+              <Stack.Screen
+                name="onboarding"
+                options={{ animation: "fade", gestureEnabled: false }}
+              />
+              <Stack.Screen
+                name="languages"
                 options={{ presentation: "modal", animation: "slide_from_bottom" }}
               />
             </Stack>

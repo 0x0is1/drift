@@ -1,5 +1,5 @@
 import { XStack, Text, View, useTheme } from "tamagui";
-import { Sun, Moon, Menu, Wifi } from "@tamagui/lucide-icons";
+import { Sun, Moon, Menu, Wifi, Languages } from "@tamagui/lucide-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useRouter } from "expo-router";
 import { useAppTheme } from "@contexts/ThemeContext";
@@ -42,6 +42,15 @@ export function HomeHeader({ title }: { title: string }) {
         </Text>
       </XStack>
       <XStack alignItems="center" gap={4}>
+        <View
+          width={40}
+          height={40}
+          alignItems="center"
+          justifyContent="center"
+          onPress={() => router.push(routes.languages as any)}
+        >
+          <Languages color={theme.colorSecondary?.val as string} size={22} />
+        </View>
         <View
           width={40}
           height={40}

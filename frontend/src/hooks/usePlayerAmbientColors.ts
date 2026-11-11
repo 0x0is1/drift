@@ -19,7 +19,7 @@ export function usePlayerAmbientColors(artworkUri: string | undefined): [string,
 
   useEffect(() => {
     if (!artworkUri) {
-      setColors(FALLBACK);
+      queueMicrotask(() => setColors(FALLBACK));
       return;
     }
     let cancelled = false;

@@ -1,5 +1,4 @@
-import { Tabs } from "expo-router";
-import { usePathname } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import { Home, Search, ListMusic, Flame, User } from "@tamagui/lucide-icons";
 import { useTheme } from "tamagui";
 import { Pressable, View, type PressableProps } from "react-native";

@@ -33,6 +33,8 @@ export class JioSaavnService implements IJioSaavnService {
       headers: {
         Accept: "application/json, text/plain, */*",
         Referer: "https://www.jiosaavn.com/",
+        cookie:
+          "_pl=web6dot0-; DL=english; B=23a9ad0f2eb7e2c904f14a7ac703b789; CT=MjA3ODc4OTkxNQ%3D%3D; geo=122.179.10.18%2CIN%2CKarnataka%2CBengaluru%2C562130; mm_latlong=12.9753%2C77.591; CH=G03%2CA07%2CO00%2CL03; L=hindi",
       },
     });
     if (response.status >= 400) {

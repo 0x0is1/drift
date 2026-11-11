@@ -5,6 +5,7 @@ import { View, Text, XStack, useTheme } from "tamagui";
 import { ChevronLeft } from "@tamagui/lucide-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppTheme } from "@contexts/ThemeContext";
+import { useLanguages } from "@contexts/LanguageContext";
 import { useSession } from "@hooks/useSession";
 import { supabase, ensureSession } from "@lib/supabase";
 import { routes } from "@constants/routes";
@@ -70,6 +71,7 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const { scheme, toggleScheme } = useAppTheme();
   const { isAnonymous } = useSession();
+  const { selectedLanguages, allLanguages } = useLanguages();
   const [streamQuality, setStreamQualityState] = useState<Quality | null>(null);
   const [downloadQuality, setDownloadQualityState] = useState<Quality | null>(null);
   const [notificationsEnabled, setNotificationsEnabledState] = useState<boolean | null>(null);
@@ -143,6 +145,16 @@ export default function SettingsScreen() {
                 trackColor={{ true: tokens.color.tealAccent.val, false: tokens.color.gray600.val }}
               />
             }
+          />
+        </SettingsSection>
+
+        <SettingsSection title="Content">
+          <SettingsRow
+            label="Music Languages"
+            subtitle={selectedLanguages
+              .map((id) => allLanguages.find((l) => l.id === id)?.name || id)
+              .join(", ")}
+            onPress={() => router.push(routes.languages as any)}
           />
         </SettingsSection>
 

@@ -1,4 +1,5 @@
 import { ToastAndroid, Platform } from "react-native";
+import { buildCookieHeader, normalizeLanguages } from "./languages";
 
 /**
  * Ported near-verbatim from old lissen-mobile/src/libs/APIParser.js.
@@ -20,12 +21,23 @@ function notifyError(message: string) {
 }
 
 class ServiceProvider {
+  private currentLanguages: string[] = ["hindi"];
+
+  setLanguages(languages: string[]) {
+    this.currentLanguages = normalizeLanguages(languages);
+  }
+
+  getLanguages(): string[] {
+    return this.currentLanguages;
+  }
+
   private async request<T = any>(dir: string): Promise<T> {
     try {
       const response = await fetch(`${baseURL}${dir}`, {
         headers: {
           Accept: "application/json, text/plain, */*",
           Referer: "https://www.jiosaavn.com/",
+          cookie: buildCookieHeader(this.currentLanguages),
         },
       });
       if (response.status < 400) {
@@ -95,8 +107,9 @@ class ServiceProvider {
   }
 
   async getStationById(name: string, count = 20) {
+    const primaryLang = this.currentLanguages[0] ?? "hindi";
     const station = await this.request<{ stationid: string }>(
-      `webradio.createFeaturedStation&language=hindi&pid=&query=&name=${name.replaceAll(" ", "+")}&mode=&artistid=&_format=json&_marker=0&ctx=web6dot0`,
+      `webradio.createFeaturedStation&language=${primaryLang}&pid=&query=&name=${name.replaceAll(" ", "+")}&mode=&artistid=&_format=json&_marker=0&ctx=web6dot0`,
     );
     return this.request(
       `webradio.getSong&stationid=${station.stationid}&k=${count}&next=1&_format=json&_marker=0&ctx=web6dot0&api_version=4`,

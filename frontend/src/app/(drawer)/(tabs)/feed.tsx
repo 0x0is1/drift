@@ -179,7 +179,7 @@ export default function FeedScreen() {
   // Lyrics are per-song — swiping to a new card while the panel is open
   // would otherwise keep showing the previous track's lyrics.
   useEffect(() => {
-    setLyricsVisible(false);
+    queueMicrotask(() => setLyricsVisible(false));
   }, [activeId]);
 
   const toggleLyrics = async () => {

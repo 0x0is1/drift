@@ -46,6 +46,24 @@ const color = {
   tealAccentGlow: "rgba(56, 201, 153, 0.35)",
   dangerRed: "#e5484d",
   whiteTrackDim: "rgba(255, 255, 255, 0.3)",
+
+  // --- Solid language card colors ---
+  langHindi: "#D32F2F",
+  langEnglish: "#1D4ED8",
+  langPunjabi: "#D97706",
+  langTelugu: "#047857",
+  langTamil: "#B91C1C",
+  langBhojpuri: "#C2410C",
+  langBengali: "#A21CAF",
+  langGujarati: "#6D28D9",
+  langMarathi: "#BE123C",
+  langKannada: "#BE185D",
+  langMalayalam: "#0F766E",
+  langHaryanvi: "#15803D",
+  langRajasthani: "#991B1B",
+  langOdia: "#0369A1",
+  langAssamese: "#0E7490",
+  langSanskrit: "#4C1D95",
 } as const;
 
 export const tokens = createTokens({

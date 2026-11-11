@@ -22,10 +22,12 @@ export const routes = {
   addToPlaylist: (trackId: string) => `/add-to-playlist?trackId=${trackId}`,
   listenTogether: "/listen-together",
   syncNearby: "/sync-nearby",
+  onboarding: "/onboarding",
+  languages: "/languages",
 } as const;
 
 /** Routes where the floating music island must stay hidden (full player is showing itself). */
-export const islandHiddenOnRoutes = ["/player", "/feed"];
+export const islandHiddenOnRoutes = ["/player", "/feed", "/onboarding"];
 
 /**
  * Routes rendered inside the (tabs) group — the only ones with a real tab

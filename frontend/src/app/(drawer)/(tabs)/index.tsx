@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { FlatList, ScrollView, ToastAndroid } from "react-native";
 import { Text, View, XStack, Image } from "tamagui";
 import { useRouter } from "expo-router";
@@ -8,6 +8,7 @@ import { HomeHeader } from "@components/home/HomeHeader";
 import { Skeleton } from "@components/ui/Skeleton";
 import { routes } from "@constants/routes";
 import { serviceProvider } from "@lib/jiosaavn";
+import { useLanguages } from "@contexts/LanguageContext";
 
 type ModuleItem = {
   id: string;
@@ -25,7 +26,18 @@ const optimizeImage = (uri: string) => uri.replace("150x150", "500x500").replace
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { data, error, isLoading } = useSWR("home-launch-data", () => serviceProvider.getLaunchData());
+  const { isOnboarded, isLoading: langLoading } = useLanguages();
+
+  useEffect(() => {
+    if (!langLoading && !isOnboarded) {
+      router.replace(routes.onboarding as any);
+    }
+  }, [langLoading, isOnboarded, router]);
+
+  const { data, error, isLoading } = useSWR(
+    isOnboarded ? "home-launch-data" : null,
+    () => serviceProvider.getLaunchData(),
+  );
 
   const categories: Category[] = useMemo(() => {
     if (!data) return [];
