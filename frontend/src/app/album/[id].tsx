@@ -15,19 +15,27 @@ import { routes } from "@constants/routes";
 import { tokens } from "@theme/tokens";
 
 export default function AlbumViewerScreen() {
-  const { id, type, name, image } = useLocalSearchParams<{
+  const { id, type, name, image, lang, isArtist } = useLocalSearchParams<{
     id: string;
     type?: CollectionType;
     name?: string;
     image?: string;
+    lang?: string;
+    isArtist?: string;
   }>();
   const theme = useTheme();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { addTracks, playurlOverrider, formatTime, playState, isLiked, toggleLike } = usePlayer();
   const { data: album, error, isLoading: loading } = useSWR(
-    ["collection", type ?? "album", id],
-    () => fetchCollection(type ?? "album", id, { name, image }),
+    ["collection", type ?? "album", id, lang, isArtist],
+    () =>
+      fetchCollection(type ?? "album", id, {
+        name,
+        image,
+        language: lang,
+        isArtist: isArtist === "1",
+      }),
   );
   const [startingIndex, setStartingIndex] = useState<number | null>(null);
   const [activeTrackId, setActiveTrackId] = useState<string | null>(null);

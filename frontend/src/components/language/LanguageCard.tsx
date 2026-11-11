@@ -19,7 +19,7 @@ export function LanguageCard({ item, isSelected, onPress }: LanguageCardProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={{ flex: 1, minWidth: "46%", elevation: isSelected ? 4 : 1 }}
+      style={{ flex: 1, minWidth: "46%" }}
       android_ripple={{ color: tokens.color.overlaySecondary.val }}
     >
       <View

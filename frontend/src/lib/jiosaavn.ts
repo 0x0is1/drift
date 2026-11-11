@@ -33,11 +33,13 @@ class ServiceProvider {
 
   private async request<T = any>(dir: string): Promise<T> {
     try {
+      const cookieHeader = buildCookieHeader(this.currentLanguages);
       const response = await fetch(`${baseURL}${dir}`, {
         headers: {
           Accept: "application/json, text/plain, */*",
           Referer: "https://www.jiosaavn.com/",
-          cookie: buildCookieHeader(this.currentLanguages),
+          Cookie: cookieHeader,
+          cookie: cookieHeader,
         },
       });
       if (response.status < 400) {
@@ -50,7 +52,10 @@ class ServiceProvider {
     }
   }
 
-  async getLaunchData() {
+  async getLaunchData(languages?: string[]) {
+    if (languages && languages.length > 0) {
+      this.setLanguages(languages);
+    }
     return this.request(
       `webapi.getLaunchData&api_version=4&_format=json&_marker=0&ctx=web6dot0`,
     );
@@ -106,13 +111,58 @@ class ServiceProvider {
     return this.request(`playlist.getDetails&listid=${id}&_format=json`);
   }
 
+  async getStation(params: {
+    name: string;
+    id?: string | undefined;
+    isArtist?: boolean | undefined;
+    language?: string | undefined;
+    count?: number | undefined;
+  }): Promise<Record<string, any>> {
+    const { name, id, isArtist, language, count = 20 } = params;
+    let station: { stationid?: string; error?: any } | null = null;
+
+    if (isArtist) {
+      try {
+        station = await this.request<{ stationid?: string; error?: any }>(
+          `webradio.createArtistStation&artistid=${encodeURIComponent(id ?? "")}&name=${encodeURIComponent(name)}&query=${encodeURIComponent(name)}&_format=json&_marker=0&ctx=web6dot0`,
+        );
+      } catch (e) {
+        console.warn("createArtistStation failed", e);
+      }
+    }
+
+    if (!station || !station.stationid) {
+      const primaryLang = language || this.currentLanguages[0] || "hindi";
+      try {
+        station = await this.request<{ stationid?: string; error?: any }>(
+          `webradio.createFeaturedStation&language=${primaryLang}&pid=&query=&name=${encodeURIComponent(name).replaceAll("%20", "+")}&mode=&artistid=&_format=json&_marker=0&ctx=web6dot0`,
+        );
+      } catch (e) {
+        console.warn("createFeaturedStation failed", e);
+      }
+    }
+
+    if (!station || !station.stationid) {
+      return {};
+    }
+
+    try {
+      return await this.request<Record<string, any>>(
+        `webradio.getSong&stationid=${encodeURIComponent(station.stationid)}&k=${count}&next=1&_format=json&_marker=0&ctx=web6dot0&api_version=4`,
+      );
+    } catch (e) {
+      console.warn("getSong for station failed", e);
+      return {};
+    }
+  }
+
   async getStationById(name: string, count = 20) {
-    const primaryLang = this.currentLanguages[0] ?? "hindi";
-    const station = await this.request<{ stationid: string }>(
-      `webradio.createFeaturedStation&language=${primaryLang}&pid=&query=&name=${name.replaceAll(" ", "+")}&mode=&artistid=&_format=json&_marker=0&ctx=web6dot0`,
-    );
+    return this.getStation({ name, count });
+  }
+
+  async getShowById(id: string) {
     return this.request(
-      `webradio.getSong&stationid=${station.stationid}&k=${count}&next=1&_format=json&_marker=0&ctx=web6dot0&api_version=4`,
+      `show.getHomePage&show_id=${id}&_format=json&_marker=0&ctx=web6dot0`,
     );
   }
 

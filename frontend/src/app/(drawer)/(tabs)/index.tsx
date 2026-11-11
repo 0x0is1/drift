@@ -1,11 +1,11 @@
 import { useMemo, useEffect } from "react";
 import { FlatList, ScrollView, ToastAndroid } from "react-native";
-import { Text, View, XStack, Image } from "tamagui";
+import { Text, View, Image } from "tamagui";
 import { useRouter } from "expo-router";
 import { decode } from "html-entities";
 import useSWR from "swr";
 import { HomeHeader } from "@components/home/HomeHeader";
-import { Skeleton } from "@components/ui/Skeleton";
+import { HomeSkeleton } from "@components/home/HomeSkeleton";
 import { routes } from "@constants/routes";
 import { serviceProvider } from "@lib/jiosaavn";
 import { useLanguages } from "@contexts/LanguageContext";
@@ -18,15 +18,22 @@ type ModuleItem = {
   type: string;
   perma_url?: string;
   artistid?: string;
+  more_info?: any;
 };
 
 type Category = { id: string; title: string; data: ModuleItem[] };
 
-const optimizeImage = (uri: string) => uri.replace("150x150", "500x500").replace("50x50", "500x500");
+const optimizeImage = (uri?: string) => {
+  if (!uri) return "";
+  return uri
+    .replace(/^http:\/\//i, "https://")
+    .replace("150x150", "500x500")
+    .replace("50x50", "500x500");
+};
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { isOnboarded, isLoading: langLoading } = useLanguages();
+  const { selectedLanguages, isOnboarded, isLoading: langLoading } = useLanguages();
 
   useEffect(() => {
     if (!langLoading && !isOnboarded) {
@@ -34,9 +41,12 @@ export default function HomeScreen() {
     }
   }, [langLoading, isOnboarded, router]);
 
+  const activeLangs = selectedLanguages.length > 0 ? selectedLanguages : ["hindi"];
+  const swrKey = !langLoading && isOnboarded ? ["home-launch-data", ...activeLangs] : null;
+
   const { data, error, isLoading } = useSWR(
-    isOnboarded ? "home-launch-data" : null,
-    () => serviceProvider.getLaunchData(),
+    swrKey,
+    () => serviceProvider.getLaunchData(activeLangs),
   );
 
   const categories: Category[] = useMemo(() => {
@@ -54,7 +64,7 @@ export default function HomeScreen() {
     const name = decode(item.title || item.name || "");
     switch (item.type) {
       case "album": {
-        const token = item.perma_url?.split("/").filter(Boolean).pop();
+        const token = item.perma_url?.split("/").filter(Boolean).pop() || item.id;
         if (token) {
           router.push(`${routes.album(token)}?type=album` as any);
           return;
@@ -64,9 +74,17 @@ export default function HomeScreen() {
       case "playlist":
         router.push(`${routes.album(item.id)}?type=playlist` as any);
         return;
-      case "radio_station":
+      case "radio_station": {
+        const isArtist = item.more_info?.featured_station_type === "artist";
+        const stationLang = item.more_info?.language || "";
         router.push(
-          `${routes.album(encodeURIComponent(item.id))}?type=radio_station&name=${encodeURIComponent(name)}&image=${encodeURIComponent(item.image)}` as any,
+          `${routes.album(encodeURIComponent(item.id))}?type=radio_station&name=${encodeURIComponent(name)}&image=${encodeURIComponent(item.image)}&lang=${encodeURIComponent(stationLang)}&isArtist=${isArtist ? "1" : "0"}` as any,
+        );
+        return;
+      }
+      case "show":
+        router.push(
+          `${routes.album(encodeURIComponent(item.id))}?type=show&name=${encodeURIComponent(name)}&image=${encodeURIComponent(item.image)}` as any,
         );
         return;
       case "artist":
@@ -85,21 +103,7 @@ export default function HomeScreen() {
     <View flex={1} backgroundColor="$background">
       <HomeHeader title="HOME" />
       {loading ? (
-        <View paddingTop={16} gap={24}>
-          {Array.from({ length: 3 }).map((_, row) => (
-            <View key={row} gap={12}>
-              <Skeleton width={140} height={20} borderRadius={6} style={{ marginLeft: 24 }} />
-              <XStack paddingHorizontal={24} gap={12}>
-                {Array.from({ length: 3 }).map((__, i) => (
-                  <View key={i} width={140} gap={8}>
-                    <Skeleton width={140} height={140} borderRadius={12} />
-                    <Skeleton width="80%" height={13} />
-                  </View>
-                ))}
-              </XStack>
-            </View>
-          ))}
-        </View>
+        <HomeSkeleton />
       ) : error ? (
         <View flex={1} alignItems="center" justifyContent="center" gap={8} paddingHorizontal={24}>
           <Text fontFamily="body" fontSize="5" color="$colorSecondary" textAlign="center">

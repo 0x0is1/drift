@@ -9,7 +9,6 @@ import {
   type LanguageItem,
 } from "@lib/languages";
 import { serviceProvider } from "@lib/jiosaavn";
-import { mutate } from "swr";
 
 interface LanguageContextType {
   selectedLanguages: string[];
@@ -24,7 +23,7 @@ const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [selectedLanguages, setSelectedLanguagesState] = useState<string[]>(["hindi"]);
-  const [isOnboarded, setIsOnboarded] = useState<boolean>(true); // default true while reading storage to avoid flash
+  const [isOnboarded, setIsOnboarded] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -56,7 +55,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setSelectedLanguagesState(effective);
     serviceProvider.setLanguages(effective);
     await persistLanguages(effective);
-    await mutate("home-launch-data");
   }, []);
 
   const completeOnboarding = useCallback(async (languages: string[]) => {
@@ -68,7 +66,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       setIsOnboardingCompleted(true),
     ]);
     setIsOnboarded(true);
-    await mutate("home-launch-data");
   }, []);
 
   return (
