@@ -26,8 +26,8 @@ export const routes = {
   languages: "/languages",
 } as const;
 
-/** Routes where the floating music island must stay hidden (full player is showing itself). */
-export const islandHiddenOnRoutes = ["/player", "/feed", "/onboarding"];
+/** Routes where the floating music island must stay hidden (full player is showing itself, or modal actions at bottom). */
+export const islandHiddenOnRoutes = ["/player", "/feed", "/onboarding", "/languages"];
 
 /**
  * Routes rendered inside the (tabs) group — the only ones with a real tab
